@@ -66,3 +66,27 @@ cat_feats = data.select_dtypes(include=['object']).columns
 for col in cat_feats:
     print(f"\nCategorías únicas en '{col}': {data[col].unique()}")
     print(data[col].value_counts())
+
+#Transformación de datos 
+# Escalado de variables numéricas
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+num_feats = data.select_dtypes(include=['int64', 'float64']).columns
+data[num_feats] = scaler.fit_transform(data[num_feats])
+
+# Comprobamos el resultado de la normalización
+print("\nDescripción estadística de variables numéricas normalizadas:\n", data[num_feats].describe())
+
+# Verificación de consistencia en datos categóricos
+# Eliminar posibles espacios en blanco y homogeneizar las categorías en minúsculas
+for col in cat_feats:
+    data[col] = data[col].str.strip().str.lower()
+
+# Revisión de las categorías después del ajuste de consistencia
+for col in cat_feats:
+    print(f"\nCategorías en '{col}' tras ajuste:\n", data[col].unique())
+
+# Verificar los resultados finales
+print("Transformaciones completadas. Vista previa del dataset:")
+print(data.head())
