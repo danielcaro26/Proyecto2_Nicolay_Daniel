@@ -90,3 +90,27 @@ for col in cat_feats:
 # Verificar los resultados finales
 print("Transformaciones completadas. Vista previa del dataset:")
 print(data.head())
+
+#Exploración de datos
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+num_feats = data.select_dtypes(include=['int64', 'float64']).columns
+data[num_feats].hist(bins=20, figsize=(12, 10))
+plt.suptitle("Distribución de variables numéricas")
+plt.show()
+
+plt.figure(figsize=(12, 8))
+for i, col in enumerate(num_feats, 1):
+    plt.subplot(2, 4, i)
+    sns.boxplot(data=data, y=col)
+    plt.title(f"Boxplot de {col}")
+plt.tight_layout()
+plt.show()
+
+sns.countplot(data=data, x='y')
+plt.title("Distribución de la variable objetivo 'y'")
+plt.show()
+
+
+
