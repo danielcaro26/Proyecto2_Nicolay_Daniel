@@ -6,7 +6,7 @@ from ydata_profiling import ProfileReport
 data = pd.read_csv('bank-full.csv', sep=';')
 
 # Mostrar las primeras filas del dataset
-print("Primeras filas del dataset:")
+print("Primeras filas de la base de datos:")
 print(data.head())
 
 # Información general sobre el dataset (tipos de datos y valores nulos)
