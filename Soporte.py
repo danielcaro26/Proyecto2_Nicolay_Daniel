@@ -173,3 +173,41 @@ model.compile(loss="categorical_crossentropy",
 # Entrenar el modelo
 history = model.fit(X_train, y_train, epochs=100,
                     validation_data=(X_valid, y_valid))
+
+# Función para probar la predicción del modelo
+def predict(lista):
+    Xnew = pd.DataFrame([{
+        "age": lista[0],
+        "job": lista[1],
+        "marital": lista[2],
+        "education": lista[3],
+        "default": lista[4],
+        "balance": lista[5],
+        "housing": lista[6],
+        "loan": lista[7],
+        "contact": lista[8],
+        "day": lista[9],
+        "month": lista[10],
+        "duration": lista[11],
+        "campaign": lista[12],
+        "pdays": lista[13],
+        "previous": lista[14],
+        "poutcome": lista[15]
+    }])
+    
+    nueva_data_codif = codif.transform(Xnew[cat_cols])
+    nueva_data_num = Xnew.drop(cat_cols, axis=1)
+
+    new_data = np.hstack((nueva_data_num, nueva_data_codif))
+
+    nueva_data_escalada = std_scl.transform(new_data)
+
+    ypred = model.predict(nueva_data_escalada)
+
+    opciones_pred = np.argmax(ypred, axis=1)
+    if opciones_pred == 1:
+        opciones_pred = "yes"
+    else:
+        opciones_pred = "no"
+
+    return ypred, opciones_pred
