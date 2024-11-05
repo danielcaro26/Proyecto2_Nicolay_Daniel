@@ -1,9 +1,13 @@
 import pandas as pd
 import numpy as np
+import tensorflow as tf
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder
 from ydata_profiling import ProfileReport
 
 # Cargar el archivo CSV
-data = pd.read_csv('bank-full.csv', sep=';')
+data = pd.read_csv("https://raw.githubusercontent.com/NicolayB/archivos/refs/heads/main/proyecto%202/bank-full.csv", delimiter=";")
 
 # Mostrar las primeras filas del dataset
 print("Primeras filas de la base de datos:")
@@ -113,4 +117,50 @@ plt.title("Distribución de la variable objetivo 'y'")
 plt.show()
 
 
+# Modelo de redes
+# Establecer la matriz de variables explicativas y la variable de interés
+X = data.iloc[:, :-1]
+y = data.iloc[:, -1]
 
+# convertir variable objetivo en categórica
+y = y.map({'yes': 1, 'no': 0})
+y = tf.keras.utils.to_categorical(y)
+
+# Variables categóricas
+cat_cols = X.select_dtypes(include=['object']).columns
+
+# Codificar variables categóricas
+codif = OneHotEncoder(sparse_output=False, drop='first')
+X_codif = codif.fit_transform(X[cat_cols])
+
+# Variables numéricas
+X_num = X.drop(cat_cols, axis=1)
+
+# Combinar variables numéricas y categóricas
+X_final = np.hstack((X_num, X_codif))
+
+# dividir datos en entrenamiento, validación y prueba
+X_train_full, X_test, y_train_full, y_test = train_test_split(
+    X_final, y, test_size=0.2, random_state=42
+)
+X_train, X_valid, y_train, y_valid = train_test_split(
+    X_train_full, y_train_full, test_size=0.2, random_state=42
+)
+
+# re-escalar datos
+std_scl = StandardScaler()
+X_train = std_scl.fit_transform(X_train)
+X_valid = std_scl.transform(X_valid)
+X_test = std_scl.transform(X_test)
+
+tf.random.set_seed(42)
+tf.keras.backend.clear_session()
+
+# modelo de redes
+model = tf.keras.Sequential()
+model.add(tf.keras.layers.InputLayer(input_shape=(X_final.shape[1],)))
+model.add(tf.keras.layers.Dense(32, activation="relu"))
+model.add(tf.keras.layers.Dense(2, activation="softmax"))
+
+# resumen
+print(model.summary())
