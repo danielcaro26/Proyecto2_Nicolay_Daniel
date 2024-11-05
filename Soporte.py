@@ -211,3 +211,11 @@ def predict(lista):
         opciones_pred = "no"
 
     return ypred, opciones_pred
+
+# Ejemplo de predicción
+datos_ejemplo = [35, "blue-collar", "single", "secondary", "no", 200, "yes", "yes", "cellular", 5, "aug", 230, 2, 20, 3, "success"]
+ejemplo = predict(datos_ejemplo)
+probabilidades = ejemplo[0]
+aceptacion = ejemplo[1]
+print(probabilidades)
+print(aceptacion)
