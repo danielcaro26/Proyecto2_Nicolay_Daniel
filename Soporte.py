@@ -164,3 +164,12 @@ model.add(tf.keras.layers.Dense(2, activation="softmax"))
 
 # resumen
 print(model.summary())
+
+# Compilar el modelo
+model.compile(loss="categorical_crossentropy",
+              optimizer="sgd",
+              metrics=["accuracy"])
+
+# Entrenar el modelo
+history = model.fit(X_train, y_train, epochs=100,
+                    validation_data=(X_valid, y_valid))
