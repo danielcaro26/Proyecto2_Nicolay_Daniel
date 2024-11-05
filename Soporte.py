@@ -219,3 +219,11 @@ probabilidades = ejemplo[0]
 aceptacion = ejemplo[1]
 print(probabilidades)
 print(aceptacion)
+
+# Serialización
+model.save('red_bank.keras')
+
+# Escalamiento y codificación
+import joblib
+joblib.dump(std_scl, "scaler.pkl")
+joblib.dump(codif, "encoder.pkl")
